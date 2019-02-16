@@ -3,7 +3,6 @@ import com
 import decoder as dec
 from firebase import firebase
 
-firebase = firebase.FirebaseApplication('https://iktest-61f5e.firebaseio.com/', None)
 
 def test(arr):
     for i in arr:
@@ -13,8 +12,10 @@ def test(arr):
         firebase.post('/ik', data, params='2')
         data = 0
 
-arr = [i for i in range(11,19)]
-#while(1):
+
+firebase = firebase.FirebaseApplication('https://iktest-61f5e.firebaseio.com/', None)
+
+arr = [i for i in range(11, 19)]
 print(time.clock())
 test(arr)
 print(time.clock())
