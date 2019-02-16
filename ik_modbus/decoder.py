@@ -1,8 +1,11 @@
 import time
 
 def decode(arr: bytes):
-
-
+    """
+    Decode array of bytes to form for db
+    :param arr: 24 bytes from com port
+    :return: collection of data
+    """
     arr_rays = [0 for x in range(72)]
     k = 0
     for i in range(1,19):
@@ -27,4 +30,10 @@ def decode(arr: bytes):
             'rele': (arr[21]&0b10000000) >> 7,
             'time': time.strftime("%Y-%m-%d-%H.%M.%S", time.localtime())
             }
+    return data
+
+def decode_multi(arr):
+    data = []
+    for i in range(0, len(arr)):
+        data.append(decode(arr[i]))
     return data
