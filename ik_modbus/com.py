@@ -2,6 +2,9 @@ import crc
 import serial
 import time
 
+BAUD_RATE = 115200
+COM_PORT = 'COM6'
+
 
 def form_req(adr: int):
     """Form request frame kind: 0xXX(address),0x00,0x00,0xXX(CRC low),0xXX(CRC high)
@@ -21,11 +24,10 @@ def com_session(adr: int):
     :return: if CRC is ok: response from device - array of 24 bytes
             else: string 'ERROR CRC'
     """
-    # without this delay don't work
-    time.sleep(0.05)
+    time.sleep(0.05)                # without this delay don't work
     ser = serial.Serial()
-    ser.baudrate = 9600
-    ser.port = 'COM8'
+    ser.baudrate = BAUD_RATE
+    ser.port = COM_PORT
 
     ser.open()
     while not ser.writable():
@@ -52,8 +54,8 @@ def com_full_session(adr_arr: int):
     :return: array of array
     """
     ser = serial.Serial()
-    ser.baudrate = 9600
-    ser.port = 'COM8'
+    ser.baudrate = BAUD_RATE
+    ser.port = COM_PORT
 
     ser.open()
     k = 0
@@ -95,8 +97,40 @@ def com_long_session(adr_arr, times=10, loop=False):
             pass
 
 
-#arr = [i for i in range(11,19)]
-#print(time.clock())
-#for i in range(8):
-#    print(com_short_session(11))
-#print(time.clock())
+def com_session_test(adr: int):
+    """Make session with ine device
+    TODO! EXCEPTION if answer of device is less than 24 bytes
+    :param adr: int address of device
+    :return: if CRC is ok: response from device - array of 24 bytes
+            else: string 'ERROR CRC'
+    """
+    time.sleep(0.05)         # without this delay don't work
+    print('start fun:')
+    time.clock()
+    ser = serial.Serial()
+    ser.baudrate = BAUD_RATE
+    ser.port = COM_PORT
+
+    ser.open()
+    while not ser.writable():
+        a = 1
+    ser.write(form_req(adr))
+
+    while not ser.in_waiting:
+        pass
+    s = ser.read(ser.in_waiting)
+
+    crc_cal = crc.crc16(s[0:22])
+    crc_real = s[len(s)-2:len(s)]
+    print('end fun, time:')
+    print(time.clock())
+    if crc_real == crc_cal:
+        ser.close()
+        return s
+    else:
+        ser.close()
+        return 'ERROR CRC'
+
+
+# arr = [i for i in range(11,19)]
+#print(com_session(12))

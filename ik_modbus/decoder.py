@@ -12,14 +12,26 @@ def decode(arr: bytes):
         if arr[i] & 0b11000000 == 0b11000000:
             arr_rays.append('n')
             k += 1
+        else:
+            arr_rays.append('o')
+            k += 1
         if arr[i] & 0b00110000 == 0b00110000:
             arr_rays.append('n')
+            k += 1
+        else:
+            arr_rays.append('o')
             k += 1
         if arr[i] & 0b00001100 == 0b00001100:
             arr_rays.append('n')
             k += 1
+        else:
+            arr_rays.append('o')
+            k += 1
         if arr[i] & 0b00000011 == 0b00000011:
             arr_rays.append('n')
+            k += 1
+        else:
+            arr_rays.append('o')
             k += 1
 
     data = {'address': arr[0],
@@ -31,6 +43,7 @@ def decode(arr: bytes):
             'time': time.strftime("%Y-%m-%d-%H.%M.%S", time.localtime())
             }
     return data
+
 
 def decode_multi(arr):
     data = []
